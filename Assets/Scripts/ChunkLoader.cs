@@ -8,6 +8,9 @@ public class ChunkLoader : MonoBehaviour
 
     WallParallax wall;
 
+    [SerializeField]
+    private Transform chunkParent;
+
     private void Awake()
     {
         if (Instance == null)
@@ -17,8 +20,18 @@ public class ChunkLoader : MonoBehaviour
 
         wall = GetComponent<WallParallax>();
     }
+
+    private void UnloadChunk()
+    {
+        for (int i = 0; i < chunkParent.childCount; i++)
+        {
+            Destroy(chunkParent.GetChild(i).gameObject);
+        }
+    }
     public void LoadChunk(Chunk chunk)
     {
+        UnloadChunk();
+
         wall.SetFillerSize(chunk.chunkSize);
 
         if(chunk.obstacles.Count <1)
@@ -27,7 +40,7 @@ public class ChunkLoader : MonoBehaviour
         foreach (var obstacle in chunk.obstacles)
         {
            var go = Instantiate(obstacle.obstaclePrefab, new Vector3(0, WallParallax.Filler.position.y - obstacle.depth), Quaternion.identity);
-            go.transform.parent = gameObject.transform;
+            go.transform.parent = chunkParent;
         }
     }
 }

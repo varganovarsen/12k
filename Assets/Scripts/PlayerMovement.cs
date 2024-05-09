@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -12,8 +13,10 @@ public class PlayerMovement : MonoBehaviour
     Vector3 _velocity;
     Rigidbody2D _rigidbody;
     public Rigidbody2D Rigidbody2D => _rigidbody;
-    [field:SerializeField]
     public float Speed => _velocity.y / 60 * -1;
+
+    private bool _isOnPlatform;
+    public bool IsOnPlatform { get => _isOnPlatform; set => _isOnPlatform = value; }
 
 
     [SerializeField]
@@ -24,12 +27,14 @@ public class PlayerMovement : MonoBehaviour
     private float _basicDrag = 1f;
     [SerializeField]
     private float _minVelocity;
+    private float basicGravityScale;
 
     private bool _isInputDisabled;
 
 
     bool _holdingDrag = false;
     public Vector3 Velocity => _velocity;
+
 
     private void Awake()
     {
@@ -43,22 +48,37 @@ public class PlayerMovement : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _rigidbody.drag = _basicDrag;
+        basicGravityScale = Rigidbody2D.gravityScale;
     }
 
     private void Update()
     {
         if (_isInputDisabled)
             return;
+
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            _rigidbody.drag = _dragOnBrake;
-            _holdingDrag = true;
+            if (_isOnPlatform )
+            {
+                Freeze(false);
+            }
+            else
+            {
+                _rigidbody.drag = _dragOnBrake;
+                _holdingDrag = true;
+            }
+
+
+            
         }
         if(Input.GetKeyUp(KeyCode.Space))
         {
             _rigidbody.drag = _basicDrag;
             _holdingDrag = false;
         }
+
+        
     }
     private void FixedUpdate()
     {
@@ -89,5 +109,12 @@ public class PlayerMovement : MonoBehaviour
         _isInputDisabled = true;
         _holdingDrag = false;
         _rigidbody.drag = _basicDrag;
+    }
+
+    public void Freeze(bool freeze)
+    {
+        _rigidbody.constraints = freeze ? RigidbodyConstraints2D.FreezeAll : RigidbodyConstraints2D.FreezePositionX;
+        _rigidbody.freezeRotation = true;
+        _rigidbody.WakeUp();
     }
 }

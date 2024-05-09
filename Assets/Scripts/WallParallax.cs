@@ -22,7 +22,7 @@ public class WallParallax : MonoBehaviour
     public static Transform Ender;
 
     [SerializeField]
-    SpriteMask _tunnelMask;
+    SpriteRenderer _tunnelSprite;
 
     public float ChunkSize => startPosition.y - endPosition.y;
 
@@ -61,6 +61,11 @@ public class WallParallax : MonoBehaviour
         }
     }
 
+    [ContextMenu("Update filler size")]
+    public void SetFillerSize()
+    {
+        SetFillerSize(fillerSize);
+    }
     public void SetFillerSize(int size)
     {
         fillerSize = size;
@@ -69,8 +74,7 @@ public class WallParallax : MonoBehaviour
         _fillerSpr.size = new Vector2(_fillerSpr.size.x, fillerSize * _enderSpr.size.y);
         _ender.position = new Vector3(_ender.position.x, _filler.position.y - _fillerSpr.size.y);
         endPosition = new Vector3(_ender.position.x, Mathf.Abs(_ender.position.y - 20f));
-        Transform pivot = _tunnelMask.transform.parent;
-        pivot.localScale = new Vector3(pivot.localScale.x, _enderSpr.size.y * 2 + _fillerSpr.size.y);
+        _tunnelSprite.size = new Vector3(_tunnelSprite.size.x, _enderSpr.size.y * 2 + _fillerSpr.size.y);
     }
 
     private void OnDrawGizmos()

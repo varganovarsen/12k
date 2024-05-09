@@ -24,8 +24,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void Start()
     {
-        _health = _maxHealth;
-        OnHealthChanged?.Invoke(_health);
+        ResetHealth();
     }
 
     public void DealDamage(int damage)
@@ -39,11 +38,18 @@ public class PlayerHealth : MonoBehaviour
         OnHealthChanged?.Invoke(_health);
     }
 
+    public void ResetHealth()
+    {
+        _health = _maxHealth;
+        OnHealthChanged?.Invoke(_health);
+    }
+
     private void Die()
     {
         Debug.Log("You are dead");
 
         GetComponent<SpriteRenderer>().color = Color.gray;
-        GetComponent<PlayerMovement>().DisableInput();
+        PlayerMovement.Instance.DisableInput();
+        
     }
 }

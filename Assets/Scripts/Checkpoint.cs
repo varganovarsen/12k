@@ -14,7 +14,14 @@ public class Checkpoint : MonoBehaviour
 
         if (Mathf.Abs(PlayerMovement.Instance.Velocity.y) > deathSpeed)
         {
-
+            PlayerHealth.Instance.DealDamage(999);
+        }
+        else
+        {
+            PlayerHealth.Instance.ResetHealth();
+            PlayerMovement.Instance.Freeze(true);
+            PlayerMovement.Instance.IsOnPlatform = true;
+            GetComponent<Collider2D>().enabled = false;
         }
     }
 }
