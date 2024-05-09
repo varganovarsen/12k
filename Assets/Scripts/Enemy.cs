@@ -7,6 +7,8 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]
     float ForceToDestroy;
+    [SerializeField]
+    int damage;
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -25,5 +27,6 @@ public class Enemy : MonoBehaviour
         if (!collision.collider.CompareTag("Player"))
             return;
         GetComponent<Collider2D>().enabled = false;
+        PlayerHealth.Instance.DealDamage(damage);
     }
 }

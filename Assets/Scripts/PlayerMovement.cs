@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using TMPro.EditorUtilities;
 using UnityEngine;
 
@@ -24,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float _minVelocity;
 
+    private bool _isInputDisabled;
+
 
     bool _holdingDrag = false;
     public Vector3 Velocity => _velocity;
@@ -44,6 +47,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (_isInputDisabled)
+            return;
         if (Input.GetKeyDown(KeyCode.Space))
         {
             _rigidbody.drag = _dragOnBrake;
@@ -77,5 +82,12 @@ public class PlayerMovement : MonoBehaviour
     private void LateUpdate()
     {
         transform.position = Vector3.zero;
+    }
+
+    public void DisableInput()
+    {
+        _isInputDisabled = true;
+        _holdingDrag = false;
+        _rigidbody.drag = _basicDrag;
     }
 }
