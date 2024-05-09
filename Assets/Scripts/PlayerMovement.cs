@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     Vector3 _velocity;
     Rigidbody2D _rigidbody;
+    public Rigidbody2D Rigidbody2D => _rigidbody;
     [field:SerializeField]
     public float Speed => _velocity.y / 60 * -1;
 

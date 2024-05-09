@@ -9,6 +9,13 @@ public class DepthController : MonoBehaviour
     [SerializeField]
     private float startDepth;
 
+    [SerializeField]
+    private float _nearestEnder;
+
+    [SerializeField]
+    public Location CurrentLocation;
+    Queue<Chunk> _chunks;
+
     private void Awake()
     {
         if (Instance == null)
@@ -20,6 +27,29 @@ public class DepthController : MonoBehaviour
     private void Start()
     {
         Depth = startDepth;
+        _chunks = new Queue<Chunk>(CurrentLocation.chunks);
+        LoadNextChunk();
+
+    }
+
+    private void OnEnable()
+    {
+        WallParallax.OnChunkCompleted += LoadNextChunk;
+    }
+
+    private void OnDisable()
+    {
+        WallParallax.OnChunkCompleted -= LoadNextChunk;
+    }
+
+    private void Update()
+    {
+        
+    }
+
+    private void LoadNextChunk()
+    {
+        ChunkLoader.Instance.LoadChunk(_chunks.Dequeue());
     }
 
 }
