@@ -9,8 +9,16 @@ public class WallParallax : MonoBehaviour
     Vector3 startPosition = Vector3.zero;
     [SerializeField]
     Vector3 endPosition;
-
     [SerializeField]
+    Transform _filler;
+    SpriteRenderer _fillerSpr;
+    private void OnValidate()
+    {
+        _fillerSpr = _filler.GetChild(0).GetComponent<SpriteRenderer>();
+    }
+
+
+    [SerializeField, Range(0,0.1f)]
     float scrollSpeedMultiplier;
     private void Start()
     {
@@ -26,5 +34,12 @@ public class WallParallax : MonoBehaviour
         {
             transform.position = startPosition;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Vector3 size = new Vector3(_fillerSpr.size.x * 2 + 2, _fillerSpr.size.y);
+        Gizmos.DrawWireCube(_filler.position, size);
     }
 }

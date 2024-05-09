@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -14,9 +15,14 @@ public class PlayerMovement : MonoBehaviour
 
 
     [SerializeField]
-    float dragOnBrake = 1f;
+    private float _dragOnBrake = 1f;
     [SerializeField]
-    float basicDrag = 1f;
+    private float _dragOnStop;
+    [SerializeField]
+    private float _basicDrag = 1f;
+    [SerializeField]
+    private float _minVelocity;
+
 
     bool _holdingDrag = false;
     public Vector3 Velocity => _velocity;
@@ -32,18 +38,19 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        _rigidbody.drag = _basicDrag;
     }
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            _rigidbody.drag = dragOnBrake;
+            _rigidbody.drag = _dragOnBrake;
             _holdingDrag = true;
         }
         if(Input.GetKeyUp(KeyCode.Space))
         {
-            _rigidbody.drag = basicDrag;
+            _rigidbody.drag = _basicDrag;
             _holdingDrag = false;
         }
     }
@@ -51,10 +58,16 @@ public class PlayerMovement : MonoBehaviour
     {
        
         _velocity =_rigidbody.velocity;
-        if (Mathf.Abs(_velocity.y) < 1f && _holdingDrag)
+        if (Mathf.Abs(_velocity.y) < _minVelocity && _holdingDrag)
         {
-            _velocity.y = 0f;
-            _rigidbody.velocity = _velocity;
+            _rigidbody.drag += _dragOnBrake;
+
+            if(Mathf.Abs(_velocity.y) < 0.1f)
+            {
+                _velocity.y = 0f;
+                _rigidbody.velocity = _velocity;
+            }
+            
         }
             
         DepthController.Depth += _velocity.y / 60f;
