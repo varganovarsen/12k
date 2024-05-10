@@ -15,6 +15,6 @@ MonoBehaviour:
   chunkSize: 3
   obstacles:
   - obstaclePrefab: {fileID: 6551121607596123256, guid: 4d492ca11bacb61419cedbfeb6e5dca8, type: 3}
-    depth: 40
-  - obstaclePrefab: {fileID: 6469764189152212991, guid: e22f47e4cb7463b4fa844f7767837d46, type: 3}
     depth: 60
+  - obstaclePrefab: {fileID: 6469764189152212991, guid: e22f47e4cb7463b4fa844f7767837d46, type: 3}
+    depth: 80
